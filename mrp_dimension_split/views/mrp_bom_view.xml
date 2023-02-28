@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2023 Nicolás Ramos - (https://binhex.es) -->
+<odoo>
+
+  <record id="mrp_bom_form_view_inherit_mrp" model="ir.ui.view">
+    <field name="name">mrp.bom.view.form.inherit</field>
+    <field name="model">mrp.bom</field>
+    <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='product_id']" position="after">
+      <!-- HOJA DE CORTE -->
+        <label for="blade_width" string="Blade Widht"/>
+        <div class="o_row">
+          <field name="blade_width"/>
+        </div>
+        <label for="blade_affects_lenght" string="Affects Lenght?"/>
+        <div class="o_row">
+          <field name="blade_affects_lenght"/>
+        </div>
+        <label for="blade_affects_height" string="Affects Height?"/>
+        <div class="o_row">
+          <field name="blade_affects_height"/>
+        </div>
+
+
+        <!-- FIN HOJA DE CORTE -->
+        <label for="product_pieces_length" string="Lenght" />
+        <div class="o_row">
+          <field name="product_pieces_length" />
+        </div>
+        <label for="product_pieces_height" string="Height" />
+        <div class="o_row">
+          <field name="product_pieces_height" />
+        </div>
+        <label for="product_pieces_area" string="Piece area" />
+        <div class="o_row">
+          <field name="product_pieces_area" readonly="1" />
+        </div>
+        <label for="product_area" string="Total area" />
+        <div class="o_row">
+          <field name="product_area" readonly="1" />
+        </div>
+        <label for="product_number_of_pieces" string="Product final pieces" groups="base.group_no_one"/>
+        <div class="o_row">
+          <field name="product_number_of_pieces" readonly="1" groups="base.group_no_one"/>
+        </div>
+        
+      </xpath>
+
+      <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="after">
+        <field name="raw_product_length" />
+        <field name="raw_product_height" />
+        <field name="raw_product_area"/>
+        <field name="raw_product_usable_area"/>
+        <field name="raw_area_orientation"/>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>
