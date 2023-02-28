@@ -26,9 +26,9 @@
                     <t t-if="o.product_id">
                         <tr>
                             <td>
-                                <span>Product Parts </span><span t-field="o.product_id"/>
+                                <span>Product Parts </span><span t-field="o.bom_id.code"/>
                             </td>
-                            <td>
+                            <td class="text-right">
                                 <span t-field="o.bom_id.product_number_of_pieces"/>
                             </td>
                             
