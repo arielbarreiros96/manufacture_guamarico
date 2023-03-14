@@ -13,8 +13,8 @@ class MrpBom(models.Model):
     _inherit = "mrp.bom"
     _description = "Product dimension split"
 
-    product_pieces_length = fields.Float(_("Length"), store=True)
-    product_pieces_height = fields.Float(_("Height"), store=True)
+    product_pieces_length = fields.Float(_("Length"), store=True, default=0.0)
+    product_pieces_height = fields.Float(_("Height"), store=True, default=0.0)
     product_pieces_area = fields.Float(
         compute="_computed_product_area",
         string=_("Product usable area"),
@@ -26,12 +26,14 @@ class MrpBom(models.Model):
         string=_("Product area"),
         store=True,
         digits=dp.get_precision("Product Unit of Measure"),
+        default=0.0,
     )
     product_number_of_pieces = fields.Float(
         compute="_computed_product_area",
         string=_("Product final pieces"),
         store=True,
         digits=dp.get_precision("Product Unit of Measure"),
+        default=0.0,
     )
     # HOJA DE CORTE
     blade_width = fields.Float(
@@ -49,7 +51,13 @@ class MrpBom(models.Model):
     product_pieces_length_value = fields.Float(_("Length"), store=True)
     product_pieces_height_value = fields.Float(_("Height"), store=True)
 
-    @api.depends("product_pieces_length", "product_pieces_height", "product_qty", "blade_affects_lenght", "blade_affects_height")
+    @api.onchange(
+        "product_pieces_length",
+        "product_pieces_height",
+        "product_qty",
+        "blade_affects_lenght",
+        "blade_affects_height",
+    )
     def _computed_product_area(self):
         self.ensure_one()
         for line in self:
@@ -60,17 +68,22 @@ class MrpBom(models.Model):
                     self.product_pieces_height + self.blade_width
                 )
             else:
-                line.product_pieces_height_value = self.product_pieces_height
+
+                line.product_pieces_height_value = (
+                    self.product_pieces_height - self.blade_width
+                )
 
             if self.blade_affects_height:
                 line.product_pieces_length_value = (
                     self.product_pieces_length + self.blade_width
                 )
             else:
-                line.product_pieces_length_value = self.product_pieces_length
+                line.product_pieces_length_value = (
+                    self.product_pieces_length - self.blade_width
+                )
 
             # FIN HOJAS DE CORTE
-            
+
             line.product_pieces_area = (
                 line.product_pieces_height * line.product_pieces_length
             )
@@ -87,7 +100,7 @@ class MrpBom(models.Model):
         "product_pieces_height",
         "product_qty",
         "blade_affects_lenght",
-        "blade_affects_height"
+        "blade_affects_height",
     )
     def _computed_raw_product_area(self):
         for line in self.bom_line_ids:
