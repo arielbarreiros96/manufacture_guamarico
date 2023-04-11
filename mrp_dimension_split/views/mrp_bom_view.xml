@@ -8,7 +8,8 @@
     <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
     <field name="arch" type="xml">
       <xpath expr="//field[@name='product_id']" position="after">
-      <!-- HOJA DE CORTE -->
+
+        <!-- HOJA DE CORTE -->
         <label for="blade_width" string="Blade Widht"/>
         <div class="o_row">
           <field name="blade_width"/>
@@ -48,12 +49,18 @@
       </xpath>
 
       <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="after">
-        <field name="raw_product_length" />
-        <field name="raw_product_height" />
-        <field name="raw_product_area"/>
-        <field name="raw_product_usable_area"/>
-        <field name="raw_area_orientation"/>
+        <field name="raw_product_length" optional="show"/>
+        <field name="raw_product_height" optional="show"/>
+        <field name="raw_product_uom_id" optional="show"/>
+        <field name="raw_product_area" optional="show"/>
+        <field name="raw_product_usable_area" optional="show"/>
+        <field name="raw_area_orientation" optional="show"/>
       </xpath>
+      
+      <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+
     </field>
   </record>
 

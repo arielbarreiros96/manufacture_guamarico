@@ -7,10 +7,11 @@
     "author": "Binhex System Solutions",
     "website": "https://binhex.es",
     "license": "AGPL-3",
-    'depends': ['base', 'stock', 'mrp', 'product_dimension'],
+    'depends': ['base', 'stock', 'mrp', 'product_dimension', 'sale_mrp_bom'],
     'data': [
         'views/mrp_production_templates_view.xml',
         'views/mrp_bom_view.xml',
+        'views/stock_picking_templates_view.xml'
         
     ],
     'demo': [],
