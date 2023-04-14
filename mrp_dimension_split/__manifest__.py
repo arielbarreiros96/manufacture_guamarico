@@ -11,8 +11,8 @@
     'data': [
         'views/mrp_production_templates_view.xml',
         'views/mrp_bom_view.xml',
-        'views/stock_picking_templates_view.xml'
-        
+        'views/stock_picking_templates_view.xml',
+        'views/product_template_view.xml'
     ],
     'demo': [],
     "development_status": "Mature",
