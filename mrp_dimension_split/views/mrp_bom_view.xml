@@ -35,15 +35,15 @@
         </div>
         <label for="product_pieces_area" string="Piece area" />
         <div class="o_row">
-          <field name="product_pieces_area" readonly="1" />
+          <field name="product_pieces_area" readonly="1" force_save="1"/>
         </div>
         <label for="product_area" string="Total area" />
         <div class="o_row">
-          <field name="product_area" readonly="1" />
+          <field name="product_area" readonly="1" force_save="1"/>
         </div>
         <label for="product_number_of_pieces" string="Product final pieces" groups="base.group_no_one"/>
         <div class="o_row">
-          <field name="product_number_of_pieces" readonly="1" groups="base.group_no_one"/>
+          <field name="product_number_of_pieces" readonly="1" groups="base.group_no_one" force_save="1"/>
         </div>
         
       </xpath>
