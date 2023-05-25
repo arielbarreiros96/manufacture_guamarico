@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2023 Nicolás Ramos - (https://binhex.es) -->
+<odoo>
+
+  <record id="sale_order_form_view_inherit_mrp" model="ir.ui.view">
+    <field name="name">sale.order.view.form.inherit</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form" />
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='order_line']//tree" position="attributes">
+        <attribute name="editable"></attribute>
+      </xpath>
+      <xpath expr="//field[@name='order_line']//tree//field[@name='name']" position="after">
+        <field name="bom_id" force_save="1"/>
+      </xpath>
+      <xpath expr="//field[@name='order_line']//form//field[@name='customer_lead']/.." position="after">
+        <field name="product_template_id" invisible="1" />
+        <field name="bom_id" force_save="1"/>
+      </xpath>
+
+
+      <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="before">
+
+        <!-- HOJA DE CORTE -->
+        <group>
+          <group name="hojas_corte" string="Hoja de corte" col="6" colspan="4">
+            <label for="blade_width" string="Ancho hoja"/>
+            <div class="o_row">
+              <field name="blade_width"/>
+            </div>
+
+            <label for="blade_affects_lenght" string="Afecta al largo?"/>
+            <div class="o_row">
+              <field name="blade_affects_lenght"/>
+            </div>
+            <label for="blade_affects_height" string="Afecta al ancho?"/>
+            <div class="o_row">
+              <field name="blade_affects_height"/>
+            </div>
+          </group>
+
+
+          <!-- FIN HOJA DE CORTE -->
+          <group name="medidas" string="Medidas" col="4" colspan="2">
+            <label for="product_pieces_length" string="Largo" />
+            <div class="o_row">
+              <field name="product_pieces_length" />
+            </div>
+            <label for="product_pieces_height" string="Ancho" />
+            <div class="o_row">
+              <field name="product_pieces_height" />
+            </div>
+          </group>
+          <group col="8" colspan="6">
+            <label for="product_pieces_area" string="Área de la pieza" />
+            <div class="o_row">
+              <field name="product_pieces_area" readonly="1" force_save="1"/>
+            </div>
+            <label for="product_area" string="Área total" />
+            <div class="o_row">
+              <field name="product_area" readonly="1" force_save="1"/>
+            </div>
+            <label for="product_number_of_pieces" string="Piezas finales" groups="base.group_no_one"/>
+            <div class="o_row">
+              <field name="product_number_of_pieces" readonly="1" groups="base.group_no_one" force_save="1"/>
+            </div>
+            <label for="total_available" string="T. Componentes" groups="base.group_no_one"/>
+            <div class="o_row">
+              <field name="total_available" readonly="1" groups="base.group_no_one" force_save="1"/>
+            </div>
+          </group>
+        </group>
+
+      </xpath>
+      <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="before">
+        <field name="sale_line_bom_ids" widget="one2many">
+          <tree string="Componentes" editable="bottom">
+            <field name="company_id" invisible="1"/>
+            <field name="sequence" widget="handle"/>
+            <field name="product_id" context="{'default_type': 'product'}"/>
+            <field name="product_tmpl_id" invisible="1"/>
+            <field name="raw_product_length" optional="show"/>
+            <field name="raw_product_height" optional="show"/>
+            <field name="raw_product_uom_id" optional="hide"/>
+            <field name="raw_product_area" optional="show"/>
+            <field name="raw_product_usable_area" optional="show"/>
+            <field name="raw_area_orientation" optional="show"/>
+            <field name="product_qty" sum="1"/>
+            <field name="product_qty_available" sum="1" force_save="1"/>
+            <field name="product_qty_enter" sum="1"/>
+            <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-right oe_read_only"/>
+            <field name="attachments_count" class="text-left oe_read_only" string=" "/>
+          </tree>
+        </field>
+        <label for="notes" string="Notas específicas"/>
+        <field name="notes"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- <record id="sale_order_line_tree" model="ir.ui.view">
+        <field name="name">sale_dimension_split.sale.order.line.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree" />
+        <field name="arch" type="xml">
+            <field name="route_id" position="after">
+                <field name="bom_id"/>
+            </field>
+        </field>
+    </record> -->
+
+  <record id="mrp_bom_form_view_inherit_mrp" model="ir.ui.view">
+    <field name="name">mrp.bom.view.form.inherit</field>
+    <field name="model">mrp.bom</field>
+    <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+    <field name="arch" type="xml">
+
+      <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="after">
+        <field name="raw_product_length" optional="show"/>
+        <field name="raw_product_height" optional="show"/>
+        <field name="raw_product_uom_id" optional="show"/>
+        <field name="raw_product_area" optional="show"/>
+        <field name="raw_product_usable_area" optional="show"/>
+        <field name="raw_area_orientation" optional="show"/>
+      </xpath>
+
+      <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+
+    </field>
+  </record>
+
+  <!-- <record id="sale_order_form_inherit_sale_mrp_bom" model="ir.ui.view">
+    <field name="name">sale.order.view.form.inherit</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale_mrp_bom.sale_order_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='bom_id']" position="attributes">
+        <attribute name="readonly">1</attribute>
+        <attribute name="force_save">1</attribute>
+      </xpath>
+    </field>
+  </record> -->
+
+</odoo>
