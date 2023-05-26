@@ -30,7 +30,7 @@
                                 <span>Product Parts </span><span class="text-right" t-field="move.sale_line_id.bom_id.code"/>
                             </td>
                             <td class="text-right">
-                                <span t-field="move.sale_line_id.bom_id.product_number_of_pieces"/>
+                                <span t-field="move.sale_line_id.product_number_of_pieces"/>
                             </td>
                             
                         </tr>
