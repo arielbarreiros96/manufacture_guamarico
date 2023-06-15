@@ -5,3 +5,4 @@ from . import sale_order_line_bom
 from . import sale_order_line
 from . import sale_order
 from . import stock_move
+from . import report

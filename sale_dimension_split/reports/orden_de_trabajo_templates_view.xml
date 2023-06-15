@@ -1,26 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="order_de_trabajo_template">
-        <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
+    <template id="orden_de_trabajo_template">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="web.html_container">
                 <t t-call="web.external_layout">
+                    <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+                    <t t-set="address">
+                        <div t-field="doc.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+                    </t>
+                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
+                                        and doc.partner_invoice_id != doc.partner_id
+                                        or doc.partner_shipping_id != doc.partner_invoice_id">
+                        <t t-set="information_block">
+                            <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Datos del cliente y obra:</strong>
+                            <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Datos del cliente:</strong>
+                            <div t-field="doc.partner_invoice_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
+                                <strong>Datos de la obra:</strong>
+                                <div t-field="doc.partner_shipping_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            </t>
+                        </t>
+                    </t>
                     <div class="page">
+                        <div class="oe_structure"/>
                         
+                        <div class="row mt32 mb32" id="informations">
+                            <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2">
+                                <strong>Plazo de entrega:</strong>
+                                <p class="m-0" t-field="doc.commitment_date"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm o_main_table">
+                            <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                            <thead style="display: table-row-group">
+                                <tr>
+                                    <th name="th_description" class="text-left">Producto</th>
+                                    <th name="th_notes" class="text-right">Anotaciones</th>
+                                    <th name="th_quantity" class="text-right">Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sale_tbody">
+
+                                <t t-foreach="doc.order_line" t-as="line">
+
+                                    <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                        <t t-if="not line.display_type">
+                                            <td name="td_name"><span t-field="line.name"/></td>
+                                            <td name="td_notes"><span t-field="line.notes"/></td>
+                                            <td name="td_quantity" class="text-right">
+                                                <span t-field="line.product_uom_qty"/>
+                                                <span t-field="line.product_uom"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="line.display_type == 'line_section'">
+                                            <td name="td_section_line" colspan="99">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="line.display_type == 'line_note'">
+                                            <td name="td_note_line" colspan="99">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                    <tr t-if="len(line.sale_line_bom_ids) > 0">
+                                        <td name="td_dimensions" colspan="99">
+                                            LxA: <span t-field="line.product_pieces_length"/>x<span t-field="line.product_pieces_height"/>
+                                        </td>
+                                    </tr>
+                                    <table t-if="len(line.sale_line_bom_ids) > 0" class="table table-sm o_main_table">
+                                        <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                                        <thead style="display: table-row-group">
+                                            <tr>
+                                                <th class="text-left"></th>
+                                                <th class="text-left">Componente</th>
+                                                <th class="text-left">Largo(cm)</th>
+                                                <th class="text-left">Alto(cm)</th>
+                                                <th class="text-left">Área</th>
+                                                <th class="text-left">Necesario</th>
+                                                <th class="text-left">Stock</th>
+                                            </tr>
+                                        </thead>
+                                        <tr t-foreach="line.sale_line_bom_ids" t-as="l_bom">
+                                            <td>
+                                                -
+                                            </td>
+                                            <td>
+                                                <span t-field="l_bom.product_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l_bom.raw_product_length"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l_bom.raw_product_height"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l_bom.raw_product_area"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l_bom.product_qty"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l_bom.product_qty_available"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <t t-if="len(doc.procurement_group_id.mrp_production_ids + doc.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids) > 0">
+                            <div class="row mt32 mb32" id="informations">
+                                <div class="col-auto col-3 mw-100 mb-2">
+                                    <strong>Fabricaciones:</strong>
+                                </div>
+                            </div>
+                            <table  class="table table-sm o_main_table">
+                                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                                <thead style="display: table-row-group">
+                                    <tr>
+                                        <th name="th_description" class="text-left"></th>
+                                        <th name="th_notes" class="text-right">Producto</th>
+                                        <th name="th_quantity" class="text-right">Cantidad</th>
+                                        <th name="th_state" class="text-right">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+
+                                    <t t-foreach="doc.procurement_group_id.mrp_production_ids + doc.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids" t-as="mrp">
+                                        <tr>
+                                            <td name="td_name" class="text-left"><span t-field="mrp.name"/></td>
+                                            <td name="td_notes" class="text-right"><span t-field="mrp.product_id"/></td>
+                                            <td name="td_quantity" class="text-right">
+                                                <span t-field="mrp.product_qty"/>
+                                                <span t-field="mrp.product_uom_id"/>
+                                            </td>
+                                            <td name="td_state" class="text-right"><span t-field="mrp.state"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
                     </div>
                 </t>
             </t>
         </t>
     </template>
 
-    <record id="action_report_action_name" model="ir.actions.report">
-        <field name="name">Name</field>
-        <field name="model">action_name</field>
+    <record id="action_report_orden_de_trabajo" model="ir.actions.report">
+        <field name="name">Orden de trabajo</field>
+        <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">report.name</field>
-        <field name="report_file">report.name</field>
-        <field name="print_report_name">'%s' % object.name</field>
-        <field name="binding_model_id" ref="model_action_name"/>
+        <field name="report_name">sale_dimension_split.orden_de_trabajo_template</field>
+        <field name="report_file">sale_dimension_split.orden_de_trabajo_template</field>
+        <field name="print_report_name">'Orden de trabajo ' + '%s' % object.name</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
     </record>
 </odoo>

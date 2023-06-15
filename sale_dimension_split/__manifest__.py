@@ -18,6 +18,7 @@
     "data": [
         "reports/mrp_production_templates_view.xml",
         "reports/stock_picking_templates_view.xml",
+        "reports/orden_de_trabajo_templates_view.xml",
         "views/sale_order_view.xml",
         "views/product_template_view.xml",
         "security/ir.model.access.csv"
