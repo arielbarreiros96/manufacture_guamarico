@@ -35,6 +35,8 @@ class PDFReport(models.Model):
                     ("res_id", "in", product_tmpl_ids.ids),
                 ]
             ).mapped('datas')
+            
+            if len(attachments) == 0: return result
 
             doc = PdfFileReader(io.BytesIO(result))
             pdf = PdfFileWriter()
