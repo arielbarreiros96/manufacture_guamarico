@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
+        
         for line in self.order_line:
             if not line.bom_id:
                 if line.sale_line_bom_ids:
@@ -51,4 +51,6 @@ class SaleOrder(models.Model):
                         }
                         mrp_bom_line.create(pdt_value)
 
+        res = super(SaleOrder, self).action_confirm()
+        
         return res
