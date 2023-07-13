@@ -164,11 +164,19 @@ class SaleOrderLine(models.Model):
             line.product_pieces_area = (
                 line.product_pieces_height * line.product_pieces_length / 10000
             )
-            line.product_area = line.product_uom_qty * line.product_pieces_height / 100
+            if line.product_uom and line.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
+                line.product_area = line.product_uom_qty
+            else:
+                line.product_area = line.product_uom_qty * line.product_pieces_height / 100
             if line.product_uom_qty != 0 and line.product_pieces_length != 0:
-                line.product_number_of_pieces = math.ceil(
-                    line.product_uom_qty / (line.product_pieces_length / 100)
-                )
+                if line.product_uom and line.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
+                    #metros cuadrados
+                    line.product_number_of_pieces = math.ceil(line.product_uom_qty / ((line.product_pieces_length * line.product_pieces_height) / 10000))
+                    _logger.info("DEBBUG adhsfdfads")
+                else:
+                    line.product_number_of_pieces = math.ceil(
+                        line.product_uom_qty / (line.product_pieces_length / 100)
+                    )
 
     @api.onchange(
         "sale_line_bom_ids.product_id",
@@ -222,7 +230,16 @@ class SaleOrderLine(models.Model):
             )
 
             if self.product_area != 0 and line.raw_product_usable_area != 0:
-                line.product_qty = (
-                    math.ceil((self.product_area / line.raw_product_usable_area))
-                    * line.raw_product_area
-                )
+                if self.product_uom and self.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
+                    temp = area_h
+                    if area_v >= area_h:
+                      temp = area_v
+                    line.product_qty = (
+                        math.ceil((self.product_number_of_pieces / temp))
+                        * line.raw_product_area
+                    )
+                else:
+                    line.product_qty = (
+                        math.ceil((self.product_area / line.raw_product_usable_area))
+                        * line.raw_product_area
+                    )

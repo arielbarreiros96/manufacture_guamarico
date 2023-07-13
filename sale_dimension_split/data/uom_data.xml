@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+        Resource: uom.category
+        -->
+        <record id="product_uom_categ_area" model="uom.category">
+            <field name="name">Area</field>
+        </record>
+       <!--
+            Resource: uom.uom
+        -->
+        <record id="product_uom_area" model="uom.uom">
+            <field name="category_id" ref="product_uom_categ_area"/>
+            <field name="name">m²</field>
+            <field name="factor" eval="1.0"/>
+            <field name="rounding" eval="0.01000"/>
+            <field name="uom_type">reference</field>
+        </record>
+    </data>
+</odoo>

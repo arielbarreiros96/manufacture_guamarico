@@ -14,14 +14,15 @@
     "author": "Binhex System Solutions",
     "website": "https://binhex.es",
     "license": "AGPL-3",
-    "depends": ["base", "stock", "mrp", "product_dimension", "sale"],
+    "depends": ["base", "stock", "mrp", "product_dimension", "sale","uom"],
     "data": [
         "reports/mrp_production_templates_view.xml",
         "reports/stock_picking_templates_view.xml",
         "reports/orden_de_trabajo_templates_view.xml",
         "views/sale_order_view.xml",
         "views/product_template_view.xml",
-        "security/ir.model.access.csv"
+        "security/ir.model.access.csv",
+        "data/uom_data.xml",
     ],
     "demo": [],
     "development_status": "Mature",
