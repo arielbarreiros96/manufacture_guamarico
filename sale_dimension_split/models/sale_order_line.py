@@ -171,8 +171,8 @@ class SaleOrderLine(models.Model):
             if line.product_uom_qty != 0 and line.product_pieces_length != 0:
                 if line.product_uom and line.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
                     #metros cuadrados
-                    line.product_number_of_pieces = math.ceil(line.product_uom_qty / ((line.product_pieces_length * line.product_pieces_height) / 10000))
-                    _logger.info("DEBBUG adhsfdfads")
+                    if line.product_pieces_length and line.product_pieces_height:
+                      line.product_number_of_pieces = math.ceil(line.product_uom_qty / ((line.product_pieces_length * line.product_pieces_height) / 10000))
                 else:
                     line.product_number_of_pieces = math.ceil(
                         line.product_uom_qty / (line.product_pieces_length / 100)
@@ -219,12 +219,21 @@ class SaleOrderLine(models.Model):
             area_v = na1 * nl1
             raw_product_usable_area_h = area_h * self.product_pieces_area
             raw_product_usable_area_v = area_v * self.product_pieces_area
-            if raw_product_usable_area_h >= raw_product_usable_area_v:
-                line.raw_product_usable_area = raw_product_usable_area_h
-                line.raw_area_orientation = "h"
+            if self.product_uom and self.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
+              line.raw_area_orientation = "h"
+              temp = area_h
+              if area_v >= area_h:
+                temp = area_v
+              are = self.product_pieces_height * self.product_pieces_length / 10000
+              line.raw_product_usable_area = temp * are
+              
             else:
-                line.raw_product_usable_area = raw_product_usable_area_v
-                line.raw_area_orientation = "v"
+              if raw_product_usable_area_h >= raw_product_usable_area_v:
+                  line.raw_product_usable_area = raw_product_usable_area_h
+                  line.raw_area_orientation = "h"
+              else:
+                  line.raw_product_usable_area = raw_product_usable_area_v
+                  line.raw_area_orientation = "v"
             line.raw_product_area = (
                 line.raw_product_length * line.raw_product_height / 10000
             )
