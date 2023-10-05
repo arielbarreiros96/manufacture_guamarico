@@ -44,6 +44,7 @@ class StockRule(models.Model):
         if record:
             res.update(
                 {
+                    "name": record.name,
                     "product_pieces_length": record.product_pieces_length or 0.0,
                     "product_pieces_height": record.product_pieces_height or 0.0,
                     "product_pieces_width": record.product_pieces_width or 0.0,
