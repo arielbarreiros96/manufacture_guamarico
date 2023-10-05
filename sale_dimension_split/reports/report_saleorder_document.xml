@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2023 Nicolás Ramos - (https://binhex.es) -->
+<odoo>
+
+    <template id="report_saleorder_document" name="report_sale_order_document_inherit_view" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@class='oe_structure'][2]" position="replace">
+            <div class="oe_structure" style="margin-top:30px;"/>
+        </xpath>
+    </template>
+
+</odoo>

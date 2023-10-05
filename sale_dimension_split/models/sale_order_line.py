@@ -23,6 +23,9 @@ class SaleOrderLine(models.Model):
 
     product_pieces_length = fields.Float(_("Largo (cm)"), store=True, default=0.0)
     product_pieces_height = fields.Float(_("Alto (cm)"), store=True, default=0.0)
+    product_pieces_width = fields.Float(
+        _("Ancho (cm)"), related="product_id.product_width", store=True, default=0.0
+    )
     product_pieces_area = fields.Float(
         # compute="_computed_product_area",
         string=_("Piece area (cm)"),
@@ -115,7 +118,6 @@ class SaleOrderLine(models.Model):
                 ).format(line_product.name)
             )
 
-    
     def write(self, values):
         res = super(SaleOrderLine, self).write(values)
         if self.total_available == 0:
@@ -164,15 +166,34 @@ class SaleOrderLine(models.Model):
             line.product_pieces_area = (
                 line.product_pieces_height * line.product_pieces_length / 10000
             )
-            if line.product_uom and line.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
+            if (
+                line.product_uom
+                and line.product_uom.id
+                == self.env.ref("sale_dimension_split.product_uom_area").id
+            ):
                 line.product_area = line.product_uom_qty
             else:
-                line.product_area = line.product_uom_qty * line.product_pieces_height / 100
+                line.product_area = (
+                    line.product_uom_qty * line.product_pieces_height / 100
+                )
             if line.product_uom_qty != 0 and line.product_pieces_length != 0:
-                if line.product_uom and line.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
-                    #metros cuadrados
+                if (
+                    line.product_uom
+                    and line.product_uom.id
+                    == self.env.ref("sale_dimension_split.product_uom_area").id
+                ):
+                    # metros cuadrados
                     if line.product_pieces_length and line.product_pieces_height:
-                      line.product_number_of_pieces = math.ceil(line.product_uom_qty / ((line.product_pieces_length * line.product_pieces_height) / 10000))
+                        line.product_number_of_pieces = math.ceil(
+                            line.product_uom_qty
+                            / (
+                                (
+                                    line.product_pieces_length
+                                    * line.product_pieces_height
+                                )
+                                / 10000
+                            )
+                        )
                 else:
                     line.product_number_of_pieces = math.ceil(
                         line.product_uom_qty / (line.product_pieces_length / 100)
@@ -219,30 +240,38 @@ class SaleOrderLine(models.Model):
             area_v = na1 * nl1
             raw_product_usable_area_h = area_h * self.product_pieces_area
             raw_product_usable_area_v = area_v * self.product_pieces_area
-            if self.product_uom and self.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
-              line.raw_area_orientation = "h"
-              temp = area_h
-              if area_v >= area_h:
-                temp = area_v
-              are = self.product_pieces_height * self.product_pieces_length / 10000
-              line.raw_product_usable_area = temp * are
-              
+            if (
+                self.product_uom
+                and self.product_uom.id
+                == self.env.ref("sale_dimension_split.product_uom_area").id
+            ):
+                line.raw_area_orientation = "h"
+                temp = area_h
+                if area_v >= area_h:
+                    temp = area_v
+                are = self.product_pieces_height * self.product_pieces_length / 10000
+                line.raw_product_usable_area = temp * are
+
             else:
-              if raw_product_usable_area_h >= raw_product_usable_area_v:
-                  line.raw_product_usable_area = raw_product_usable_area_h
-                  line.raw_area_orientation = "h"
-              else:
-                  line.raw_product_usable_area = raw_product_usable_area_v
-                  line.raw_area_orientation = "v"
+                if raw_product_usable_area_h >= raw_product_usable_area_v:
+                    line.raw_product_usable_area = raw_product_usable_area_h
+                    line.raw_area_orientation = "h"
+                else:
+                    line.raw_product_usable_area = raw_product_usable_area_v
+                    line.raw_area_orientation = "v"
             line.raw_product_area = (
                 line.raw_product_length * line.raw_product_height / 10000
             )
 
             if self.product_area != 0 and line.raw_product_usable_area != 0:
-                if self.product_uom and self.product_uom.id == self.env.ref('sale_dimension_split.product_uom_area').id:
+                if (
+                    self.product_uom
+                    and self.product_uom.id
+                    == self.env.ref("sale_dimension_split.product_uom_area").id
+                ):
                     temp = area_h
                     if area_v >= area_h:
-                      temp = area_v
+                        temp = area_v
                     line.product_qty = (
                         math.ceil((self.product_number_of_pieces / temp))
                         * line.raw_product_area
@@ -252,3 +281,15 @@ class SaleOrderLine(models.Model):
                         math.ceil((self.product_area / line.raw_product_usable_area))
                         * line.raw_product_area
                     )
+
+    def _prepare_procurement_values(self, group_id=False):
+        values = super()._prepare_procurement_values(group_id=group_id)
+        values.update({
+            'group_id': group_id or False,
+            'bom_id': self.bom_id or False,
+            'product_pieces_length': self.product_pieces_length or 1.0,
+            'product_pieces_height': self.product_pieces_height or 1.0,
+            'product_pieces_width': self.product_pieces_width or 1.0,
+            'product_number_of_pieces': self.product_number_of_pieces or 0.0,
+        })
+        return values

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2023 Nicolás Ramos - (https://binhex.es) -->
+<odoo>
+
+    <template id="external_layout_background" name="external_layout_background_inherit_view" inherit_id="web.external_layout_background">
+        <xpath expr="//div/img" position="attributes">
+            <attribute name="style" add="max-width:450px; max-height:250px;" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div/div/div[2]" position="attributes">
+            <attribute name="class" remove="float-left" add="text-right" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div/div/span" position="after">
+            <div>
+                <span>e-mail: </span>
+                <span t-field="company.email"/>
+            </div>
+            <div>
+                <span>Web : </span>
+                <span t-field="company.website"/>
+            </div>
+            <div>
+                <span>Teléfono: </span>
+                <span t-field="company.phone"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[2]" position="attributes">
+            <attribute name="style" add="margin-left:15px;" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[2]/t" position="before">
+            <div class="text-left" style="margin-left:-850px; rotate(-90deg); -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg);">
+                <p style="color:rgb(19, 109, 55); font-size:60%;">
+                  Inscrita en el Reg. Merc. de Sta. Cruz de Tenerife, Tomo 817, Folio 81, Hoja TF-3398. C.I.F.: A-78058070
+                </p>
+            </div>
+        </xpath>
+
+        <xpath expr="//ul[hasclass('list-inline')]" position="replace">
+        </xpath>
+
+        <!--<xpath expr="//div[hasclass('text-muted')]" position="replace">
+        </xpath>-->
+
+        <xpath expr="//div[hasclass('text-center')]" position="after">
+            <p style="color:rgb(19, 109, 55); font-size:60%; text-align: justify; text-justify: inter-word;">
+              <b>Responsable</b>: El responsable del tratamiento de sus datos es: ROCAS CANARIAS, S.A. - A78058070 - Políg. Ind. de Güimar, Parcela 8, Manzana 11 - 38530 Candelaria - S/C de Tenerife
+              Teléfono: 922501712 - Web: www.rocasa.es - Correo-e: lopd@rocasa.es <b>Finalidad</b>: Los datos serán utilizados para el mantenimiento de la relación contractual. Los datos se conservarán por un tiempo
+              indefinido durante los plazos de prescripción legal. <b>Legitimación</b>: Relación contractual y consentimiento del interesado. <b>Destinatarios</b>: Se realizarán las cesiones previstas legalmente. <b>Derechos</b>:
+              Pueden ejercer sus derechos de acceso, rectificación, cancelación y oposición, portabilidad y limitación o retirar el consentimiento en la dirección arriba indicada. <b>Información Adicional</b>: Puede obtener
+              más información sobre protección de datos en www.rocasa.es.
+            </p>
+        </xpath>
+    </template>
+
+</odoo>

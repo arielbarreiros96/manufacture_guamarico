@@ -261,7 +261,7 @@ class SaleOrderLine(models.Model):
                     )
                 )
 
-    return res
+        return res
 
     @api.onchange(
         "product_pieces_length",
