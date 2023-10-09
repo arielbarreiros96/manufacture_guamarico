@@ -199,6 +199,13 @@ class SaleOrderLine(models.Model):
                         line.product_uom_qty / (line.product_pieces_length / 100)
                     )
 
+            if (
+                line.product_uom
+                and line.product_uom.id == self.env.ref("uom.product_uom_unit").id
+            ):
+                line.product_number_of_pieces = line.product_uom_qty
+                line.product_area = 0.0
+
     @api.onchange(
         "sale_line_bom_ids.product_id",
         "sale_line_bom_ids",
@@ -284,12 +291,14 @@ class SaleOrderLine(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         values = super()._prepare_procurement_values(group_id=group_id)
-        values.update({
-            'group_id': group_id or False,
-            'bom_id': self.bom_id or False,
-            'product_pieces_length': self.product_pieces_length or 1.0,
-            'product_pieces_height': self.product_pieces_height or 1.0,
-            'product_pieces_width': self.product_pieces_width or 1.0,
-            'product_number_of_pieces': self.product_number_of_pieces or 0.0,
-        })
+        values.update(
+            {
+                "group_id": group_id or False,
+                "bom_id": self.bom_id or False,
+                "product_pieces_length": self.product_pieces_length or 1.0,
+                "product_pieces_height": self.product_pieces_height or 1.0,
+                "product_pieces_width": self.product_pieces_width or 1.0,
+                "product_number_of_pieces": self.product_number_of_pieces or 0.0,
+            }
+        )
         return values
