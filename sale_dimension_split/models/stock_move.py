@@ -40,7 +40,7 @@ class StockMove(models.Model):
     )
     price_unit = fields.Float(
         "Unit Price",
-        related="sale_line_id.product_pieces_height",
+        related="sale_line_id.price_unit",
         digits="Product Price",
         default=0.0,
     )
