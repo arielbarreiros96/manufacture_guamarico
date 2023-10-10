@@ -22,8 +22,8 @@
       <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="before">
 
         <!-- HOJA DE CORTE -->
-        <!-- <group>
-          <group name="hojas_corte" string="Hoja de corte" col="6" colspan="4">
+        <group>
+          <!-- <group name="hojas_corte" string="Hoja de corte" col="6" colspan="4">
             <label for="blade_width" string="Ancho hoja"/>
             <div class="o_row">
               <field name="blade_width"/>
