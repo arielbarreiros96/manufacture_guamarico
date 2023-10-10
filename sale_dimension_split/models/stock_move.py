@@ -65,8 +65,9 @@ class StockMoveLine(models.Model):
         _("Alto (cm)"), related="move_id.product_pieces_height", store=True, default=0.0
     )
     product_pieces_width = fields.Float(
-        _("Ancho (cm)"), related="move_id.product_pieces_width", store=True, default=0.0
+        _("Espesor (cm)"), related="move_id.product_pieces_width", store=True, default=0.0
     )
+    
     product_number_of_pieces = fields.Float(
         # compute="_computed_product_area",
         string=_("Piezas finales del producto"),

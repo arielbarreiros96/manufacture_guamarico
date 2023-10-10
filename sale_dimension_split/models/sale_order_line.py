@@ -23,9 +23,7 @@ class SaleOrderLine(models.Model):
 
     product_pieces_length = fields.Float(_("Largo (cm)"), store=True, default=0.0)
     product_pieces_height = fields.Float(_("Alto (cm)"), store=True, default=0.0)
-    product_pieces_width = fields.Float(
-        _("Ancho (cm)"), related="product_id.product_width", store=True, default=0.0
-    )
+    product_pieces_width = fields.Float(_("Espesor (cm)"), store=True, default=0.0)
     product_pieces_area = fields.Float(
         # compute="_computed_product_area",
         string=_("Piece area (cm)"),
@@ -61,6 +59,7 @@ class SaleOrderLine(models.Model):
     )
     product_pieces_length_value = fields.Float(_("Largo (cm)"), store=True)
     product_pieces_height_value = fields.Float(_("Alto (cm)"), store=True)
+    product_pieces_width_value = fields.Float(_("Espesor (cm)"), store=True)
 
     sale_line_bom_ids = fields.Many2many(
         "sale.order.line.bom",
@@ -206,6 +205,40 @@ class SaleOrderLine(models.Model):
                 line.product_number_of_pieces = line.product_uom_qty
                 line.product_area = 0.0
 
+            if (
+                line.product_uom
+                and line.product_uom.id == self.env.ref("uom.product_uom_unit").id
+                and line.sale_line_bom_ids.product_id.uom_id.id
+                == self.env.ref("sale_dimension_split.product_uom_area").id
+            ):
+                a = (
+                    line.sale_line_bom_ids.raw_product_length
+                    // line.product_pieces_length
+                )
+                b = (
+                    line.sale_line_bom_ids.raw_product_height
+                    // line.product_pieces_height
+                )
+                c = a * b
+                d = math.ceil(line.product_uom_qty / c)
+
+                line.sale_line_bom_ids.product_qty = d * line.product_pieces_area
+
+            if (
+                line.product_uom
+                and line.product_uom.id == self.env.ref("uom.product_uom_unit").id
+                and line.sale_line_bom_ids.product_id.uom_id.id
+                == self.env.ref("uom.product_uom_meter").id
+            ):
+                a = (
+                    line.sale_line_bom_ids.raw_product_length
+                    // line.product_pieces_length
+                )
+
+                line.sale_line_bom_ids.product_qty = (
+                    a * line.product_uom_qty * line.product_pieces_length / 100
+                )
+
     @api.onchange(
         "sale_line_bom_ids.product_id",
         "sale_line_bom_ids",
@@ -295,9 +328,9 @@ class SaleOrderLine(models.Model):
             {
                 "group_id": group_id or False,
                 "bom_id": self.bom_id or False,
-                "product_pieces_length": self.product_pieces_length or 1.0,
-                "product_pieces_height": self.product_pieces_height or 1.0,
-                "product_pieces_width": self.product_pieces_width or 1.0,
+                "product_pieces_length": self.product_pieces_length or 0.0,
+                "product_pieces_height": self.product_pieces_height or 0.0,
+                "product_pieces_width": self.product_pieces_width or 0.0,
                 "product_number_of_pieces": self.product_number_of_pieces or 0.0,
             }
         )

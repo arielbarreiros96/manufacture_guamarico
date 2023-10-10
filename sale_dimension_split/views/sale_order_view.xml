@@ -22,7 +22,7 @@
       <xpath expr="//page/field[@name='order_line']/form/field[@name='name']" position="before">
 
         <!-- HOJA DE CORTE -->
-        <group>
+        <!-- <group>
           <group name="hojas_corte" string="Hoja de corte" col="6" colspan="4">
             <label for="blade_width" string="Ancho hoja"/>
             <div class="o_row">
@@ -37,11 +37,11 @@
             <div class="o_row">
               <field name="blade_affects_height"/>
             </div>
-          </group>
+          </group> -->
 
 
           <!-- FIN HOJA DE CORTE -->
-          <group name="medidas" string="Medidas" col="4" colspan="2">
+          <group name="medidas" string="Medidas" col="6" colspan="2">
             <label for="product_pieces_length" string="Largo" />
             <div class="o_row">
               <field name="product_pieces_length" />
@@ -49,6 +49,10 @@
             <label for="product_pieces_height" string="Ancho" />
             <div class="o_row">
               <field name="product_pieces_height" />
+            </div>
+            <label for="product_pieces_width" string="Espesor" />
+            <div class="o_row">
+              <field name="product_pieces_width" />
             </div>
           </group>
           <group col="8" colspan="6">
