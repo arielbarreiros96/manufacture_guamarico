@@ -24,7 +24,7 @@
             <span>Observaciones: </span>
         </xpath>
         <xpath expr="//span[@t-field='move.product_id']/.." position="attributes">
-            <attribute name="invisible">1</attribute>
+            <attribute name="attrs">{'invisible': 1}</attribute>
         </xpath>
         <xpath expr="//span[@t-field='move.product_id']/.." position="after">
             <span t-field="move.name"/>
@@ -81,7 +81,7 @@
             <span>Observaciones: </span>
         </xpath>
         <xpath expr="//span[@t-field='bo_line.product_id']/.." position="attributes">
-            <attribute name="invisible">1</attribute>
+            <attribute name="attrs">{'invisible': 1}</attribute>
         </xpath>
         <xpath expr="//span[@t-field='bo_line.product_id']/.." position="after">
             <span t-field="bo_line.name"/>
