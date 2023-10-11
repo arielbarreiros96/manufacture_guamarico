@@ -220,7 +220,10 @@ class SaleOrderLine(models.Model):
                     // line.product_pieces_height
                 )
                 c = a * b
-                d = math.ceil(line.product_uom_qty / c)
+                if c != 0:
+                    d = math.ceil(line.product_uom_qty / c)
+                else:
+                    d = 0
 
                 line.sale_line_bom_ids.product_qty = d * line.product_pieces_area
 
