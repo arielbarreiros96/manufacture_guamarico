@@ -241,6 +241,26 @@ class SaleOrderLine(models.Model):
                 line.sale_line_bom_ids.product_qty = (
                     a * line.product_uom_qty * line.product_pieces_length / 100
                 )
+                
+            if (
+                line.product_uom
+                and line.product_uom.id == self.env.ref("uom.product_uom_meter").id
+                and line.sale_line_bom_ids.product_id.uom_id.id
+                == self.env.ref("uom.product_uom_meter").id
+            ):
+                a = (
+                    line.sale_line_bom_ids.raw_product_length
+                    // line.product_pieces_length
+                )
+                b = (
+                    line.sale_line_bom_ids.raw_product_height
+                    // line.product_area
+                )
+                c = a * b
+
+                line.sale_line_bom_ids.product_qty = c * line.sale_line_bom_ids.raw_product_length
+                
+                    
 
     @api.onchange(
         "sale_line_bom_ids.product_id",
