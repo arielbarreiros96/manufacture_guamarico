@@ -76,7 +76,7 @@ class SaleOrderLineBom(models.Model):
     raw_product_area = fields.Float(
         _("Área de producto"),
         store=True,
-        digits=dp.get_precision("Product Unit of Measure"),
+        digits=(16, 4),
     )
     raw_product_usable_area = fields.Float(
         _("Área utilizable del producto"),
@@ -298,10 +298,10 @@ class SaleOrderLine(models.Model):
                 line.product_pieces_height * line.product_pieces_length / 10000
             )
             line.product_area = line.product_uom_qty * line.product_pieces_height / 100
-            if line.product_uom_qty != 0 and line.product_pieces_length != 0:
-                line.product_number_of_pieces = math.ceil(
-                    line.product_uom_qty / (line.product_pieces_length / 100)
-                )
+            # if line.product_uom_qty != 0 and line.product_pieces_length != 0:
+            #     line.product_number_of_pieces = math.ceil(
+            #         line.product_uom_qty / (line.product_pieces_length / 100)
+            #     )
 
     @api.onchange(
         "sale_line_bom_ids.product_id",
@@ -376,7 +376,7 @@ class MrpBomLine(models.Model):
     )
 
     raw_product_area = fields.Float(
-        "Product area", store=True, digits=dp.get_precision("Product Unit of Measure")
+        "Product area", store=True, digits=(16, 4)
     )
     raw_product_usable_area = fields.Float(
         "Product usable area",
