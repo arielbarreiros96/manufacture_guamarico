@@ -33,7 +33,7 @@
         <xpath expr="//div[2]/t" position="before">
             <div class="text-left" style="margin-left:-850px; rotate(-90deg); -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg);">
                 <p style="color:rgb(19, 109, 55); font-size:60%;">
-                  Inscrita en el Reg. Merc. de Sta. Cruz de Tenerife, Tomo 817, Folio 81, Hoja TF-3398. C.I.F.: A-78058070
+                  Inscrita en el Reg. Merc. de Sta. Cruz de Tenerife, C.I.F.: B38442000
                 </p>
             </div>
         </xpath>
@@ -46,11 +46,11 @@
 
         <xpath expr="//div[hasclass('text-center')]" position="after">
             <p style="color:rgb(19, 109, 55); font-size:60%; text-align: justify; text-justify: inter-word;">
-              <b>Responsable</b>: El responsable del tratamiento de sus datos es: ROCAS CANARIAS, S.A. - A78058070 - Políg. Ind. de Güimar, Parcela 8, Manzana 11 - 38530 Candelaria - S/C de Tenerife
-              Teléfono: 922501712 - Web: www.rocasa.es - Correo-e: lopd@rocasa.es <b>Finalidad</b>: Los datos serán utilizados para el mantenimiento de la relación contractual. Los datos se conservarán por un tiempo
-              indefinido durante los plazos de prescripción legal. <b>Legitimación</b>: Relación contractual y consentimiento del interesado. <b>Destinatarios</b>: Se realizarán las cesiones previstas legalmente. <b>Derechos</b>:
-              Pueden ejercer sus derechos de acceso, rectificación, cancelación y oposición, portabilidad y limitación o retirar el consentimiento en la dirección arriba indicada. <b>Información Adicional</b>: Puede obtener
-              más información sobre protección de datos en www.rocasa.es.
+              <b>Responsable</b>: El responsable del tratamiento de sus datos es: GUAMA ARICO, S.L., con CIF B38442000 y domicilio en Carretera Sbda. El Río Paraje De Arocha S/N, Cantera, 38580 - ARICO (Santa Cruz de Tenerife).
+              <b>Finalidad</b>: Los datos serán utilizados para la gestión de nuestros clientes y cobro de los servicios y/o productos. <b>Legitimación</b>: Relación contractual. <b>Destinatarios</b>: Organismos obligados por Ley.
+              <b>Derechos</b>: Puede ejercer sus derechos de acceso, rectificación, cancelación y oposición, portabilidad y limitación, a no ser objeto de decisiones automatizadas y a retirar el consentimiento prestado.
+              <b>Información adicional</b>: Puede consultar la información adicional y detallada sobre protección de datos en los carteles informativos expuestos en las instalaciones de GUAMA ARICO S.L. o solicitar una copia en
+              siguiente correo-e lopd@guamarico.com
             </p>
         </xpath>
     </template>
